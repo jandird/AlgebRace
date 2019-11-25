@@ -23,9 +23,18 @@ myShapes model = let
                    [
                    if page == "Main Menu" then
                      group
-                       [ text "ALGEB-RACE" |> sansserif |> bold |> underline |> filled (rgb 100 0 100) |> move (-50, 20)
-                        , text "START" |> sansserif |> filled (rgb 100 0 100) |> move (-80, -20) |> notifyTap (ChangePage "Play Game")
-                        , text "TUTORIAL"  |> sansserif |> filled (rgb 100 0 100) |> move (10, -20) |> notifyTap (ChangePage "Tutorial")
+                       [ square 300 |> filled green
+                        , circle 60 |> outlined (solid 20) darkGray
+                        , circle 60 |> outlined (dashed 1) yellow
+                        , redCar |> scale 0.25 |> move (sin -model.time*53 , cos -model.time*53)
+                        , blueCar |> scale 0.25 |> move (sin model.time*65 , cos model.time*65)
+                        , rect 62 12 |> filled (lightBlue) |> move (0, 5)
+                        , rect 62 12 |> filled (lightBlue) |> move (0, -9)
+                        , rect 62 12 |> filled (lightBlue) |> move (0, -23)
+                        , text "ALGEB-RACE" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 20)
+                        , text "START" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, 2) |> notifyTap (ChangePage "Play Game")
+                        , text "HOW TO PLAY" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -12) |> notifyTap (ChangePage "Tutorial")
+                        , text "HOW TO MATH" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -26)
                        ]
                    else if page == "Tutorial" then 
                      group 

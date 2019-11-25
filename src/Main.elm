@@ -71,7 +71,7 @@ question (q, (a, b, c), correct) = group
                   , if correct == 0 then 
                   group
                     [ questionButton a|> move (0, 0) |> notifyTap (UpdatePos)
-                   , questionButton b |> move (0, -15) |> notifyTap 
+                   , questionButton b |> move (0, -15)
                    , questionButton c |> move (0, -30)
                   ] 
                   else if correct == 1 then

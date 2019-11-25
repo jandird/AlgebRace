@@ -12,13 +12,14 @@ view model = collage 192 128 (myShapes model)
 -- questions list is formatted the following way:
 -- question, list of possible answers, which answer is correct (0, 1, or 2)
 
-questions = [("2x = 10", ("5", "6", "7"), 0)]
+questions = [("2x = 10", ("5", "6", "7"), 0), ("5x = 10", ("2", "3", "1"), 0), ("- 1 + x = 2", ("2", "3", "1"), 1)]
 
 -- possible pages: Main Menu, Tutorial, Play Game, Game Over
 myShapes model = let 
                    playerPos = model.playerPos
                    oppPos = model.oppPos
                    page = model.currentPage
+                   currQ = model.currentQuestion
                  in
                  [ square 300 |> filled green]
                  ++
@@ -60,31 +61,34 @@ myShapes model = let
                          , finishLine |> move (0, 50)
                          , redCar |> rotate(degrees 90) |> scale 0.25 |> move (playerPos) 
                          , blueCar |> rotate(degrees -90) |> scale 0.25 |> move (oppPos)
-                         , enterButton |> move (0, -30) |> notifyTap (UpdatePos playerPos)
-                         , group <| List.map question questions 
-                       ]
+                         -- , enterButton |> move (0, -30) |> notifyTap (UpdatePos)
+                         , question currQ
+                         ]
                  ]
+                 
 question (q, (a, b, c), correct) = group
                   [ text (q) |> centered |> filled (black) |> move (0, 20) 
                   , if correct == 0 then 
                   group
-                    [text (a) |> centered |> filled (black) |> move (0, 0) |> notifyTap (ChangePage "Main Menu")
-                   , text (b) |> centered |> filled (black) |> move (0, -10)
-                   , text (c) |> centered |> filled (black) |> move (0, -20)
+                    [ questionButton a|> move (0, 0) |> notifyTap (UpdatePos)
+                   , questionButton b |> move (0, -15) |> notifyTap 
+                   , questionButton c |> move (0, -30)
                   ] 
                   else if correct == 1 then
                   group 
-                    [text (a) |> centered |> filled (black) |> move (0, 0) 
-                   , text (b) |> centered |> filled (black) |> move (0, -10) |> notifyTap (ChangePage "Main Menu")
-                   , text (c) |> centered |> filled (black) |> move (0, -20)
+                    [questionButton a |> move (0, 0) 
+                   , questionButton b |> move (0, -15) |> notifyTap (UpdatePos)
+                   , questionButton c |> move (0, -30) 
                   ]
                   else
                   group 
-                    [text (a) |> centered |> filled (black) |> move (0, 0) 
-                   , text (b) |> centered |> filled (black) |> move (0, -10) 
-                   , text (c) |> centered |> filled (black) |> move (0, -20) |> notifyTap (ChangePage "Main Menu")
+                    [questionButton a |> move (0, 0) 
+                   , questionButton b |> move (0, -15) 
+                   , questionButton c |> move (0, -30) |> notifyTap (UpdatePos)
                   ]
                   ]
+wrongAnswer = group
+              [ text ("WRONG") |> filled (red) ]
 redCar = group   
          [ roundedRect 100 25 20
             |> filled red
@@ -155,7 +159,11 @@ mainMenuButton = group
               , text ("Main Menu") |> sansserif |> size 8 |> centered |> filled white |> move (0, -2)
               ]
 
-type Msg = Tick Float GetKeyState | UpdatePos (Float, Float) | ChangePage String
+questionButton answer = group
+                      [ rect 30 10 |> filled grey
+                      , text (answer) |> sansserif |> size 8 |> centered |> filled black |> move (0, -2)]
+
+type Msg = Tick Float GetKeyState | UpdatePos | ChangePage String
 
 update msg model = case msg of
                      Tick t _ -> let
@@ -184,12 +192,15 @@ update msg model = case msg of
                                              , oppPos = (oppX , oppY + 0.2)
                                        }
                                   else 
-                                      { model | time = t }
+                                      { model | time = t}
                                  
-                     UpdatePos pos -> let 
-                                        (x, y) = pos
+                     UpdatePos -> let 
+                                        (x, y) = model.playerPos
                                       in 
-                                      { model | playerPos = (-70, y + 35) 
+                                      { model | playerPos = (-70, y + 35)
+                                      --, questions = List.drop 1 model.questions
+                                      , currentQuestion =  Maybe.withDefault ("x + 4 = 10", ("-2", "-6", "6"), 2) <| List.head <| List.drop 1 model.questions
+                                      , questions = List.drop 1 model.questions
                                       }
                                        
                      ChangePage page -> if page == "Play Game" 
@@ -197,7 +208,8 @@ update msg model = case msg of
                                            { model | currentPage = page
                                            , playerPos = (-70, -50)
                                            , oppPos = (70, -50)
-                                           , winner = " "}
+                                           , winner = " "
+                                           , questions = questions}
                                          else
                                            { model | currentPage = page }
 
@@ -206,6 +218,6 @@ init = { time = 0
          , oppPos = (70, -50)
          , winner = " "
          , currentPage = "Main Menu"
+         , questions = questions
+         , currentQuestion = Maybe.withDefault ("0", ("0", "0", "0"), 0) <| List.head questions
          }
-
-

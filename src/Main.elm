@@ -20,11 +20,13 @@ myShapes model = let
                    oppPos = model.oppPos
                    page = model.currentPage
                  in
+                 [ square 300 |> filled green]
+                 ++
                    [
                    if page == "Main Menu" then
                      group
-                       [ square 300 |> filled green
-                        , circle 60 |> outlined (solid 20) darkGray
+                       [ 
+                        circle 60 |> outlined (solid 20) darkGray
                         , circle 60 |> outlined (dashed 1) yellow
                         , redCar |> scale 0.25 |> move (sin -model.time*53 , cos -model.time*53)
                         , blueCar |> scale 0.25 |> move (sin model.time*65 , cos model.time*65)
@@ -42,14 +44,20 @@ myShapes model = let
                          , mainMenuButton |> move (30, -30) |> notifyTap (ChangePage "Main Menu")
                        ]
                    else if page == "Game Over" then
-                     group
-                       [ text (model.winner ++ " wins!") |> sansserif |> centered |> filled red
-                       , playAgainButton |> move (-30, -30) |> notifyTap (ChangePage "Play Game")
-                       , mainMenuButton |> move (30, -30) |> notifyTap (ChangePage "Main Menu")
-                       ]
+                    group
+                      [
+                        if model.winner == "red" then 
+                          text "You Win! :)" |> sansserif |> centered |> filled blue 
+                        else 
+                          text "You Lose :(" |> sansserif |> centered |> filled red
+                        , playAgainButton |> move (-30, -30) |> notifyTap (ChangePage "Play Game")
+                        , mainMenuButton |> move (30, -30) |> notifyTap (ChangePage "Main Menu")
+                      ]
                    else -- Play Game page
                      group
-                       [ finishLine |> move (0, 50)
+                       [ rect 20 200 |> filled (lightGray) |> move (70, 0)
+                         , rect 20 200 |> filled (lightGray) |> move (-70, 0)
+                         , finishLine |> move (0, 50)
                          , redCar |> rotate(degrees 90) |> scale 0.25 |> move (playerPos) 
                          , blueCar |> rotate(degrees -90) |> scale 0.25 |> move (oppPos)
                          , enterButton |> move (0, -30) |> notifyTap (UpdatePos playerPos)
@@ -162,13 +170,13 @@ update msg model = case msg of
                                      then
                                        { model | time = t
                                              , oppPos = (oppX, 50)
-                                             , winner = "Blue car"
+                                             , winner = "blue"
                                              , currentPage = "Game Over"
                                        }
                                      else if playerY > 50 
                                        then 
                                          { model | time = t
-                                               , winner = "Red car"
+                                               , winner = "red"
                                                , currentPage = "Game Over"
                                          }
                                      else 

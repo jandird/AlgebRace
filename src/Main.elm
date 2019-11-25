@@ -20,6 +20,7 @@ myShapes model = let
                    oppPos = model.oppPos
                    page = model.currentPage
                    currQ = model.currentQuestion
+                   direction = model.direction
                  in
                  [ square 300 |> filled green]
                  ++
@@ -29,12 +30,23 @@ myShapes model = let
                        [ 
                         circle 60 |> outlined (solid 20) darkGray
                         , circle 60 |> outlined (dashed 1) yellow
-                        , redCar |> scale 0.25 |> move (sin -model.time*53 , cos -model.time*53)
-                        , blueCar |> scale 0.25 |> move (sin model.time*65 , cos model.time*65)
+                        , if model.direction == "left"
+                            then
+                            group
+                            [
+                              redCar |> scale 0.25 |> move (sin -model.time*53 , cos -model.time*53)
+                            , blueCar |> scale 0.25 |> move (sin model.time*65 , cos model.time*65)
+                            ]
+                          else
+                            group
+                            [
+                              redCar |> scale 0.25 |> move (sin model.time*53 , cos model.time*53)
+                            , blueCar |> scale 0.25 |> move (sin -model.time*65 , cos -model.time*65)
+                            ]
                         , rect 62 12 |> filled (lightBlue) |> move (0, 5)
                         , rect 62 12 |> filled (lightBlue) |> move (0, -9)
                         , rect 62 12 |> filled (lightBlue) |> move (0, -23)
-                        , text "ALGEB-RACE" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 20)
+                        , text "ALGEB-RACE" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 20) |> notifyTap (ChangeDir)
                         , text "START" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, 2) |> notifyTap (ChangePage "Play Game")
                         , text "HOW TO PLAY" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -12) |> notifyTap (ChangePage "Tutorial")
                         , text "HOW TO MATH" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -26)
@@ -163,7 +175,7 @@ questionButton answer = group
                       [ rect 30 10 |> filled grey
                       , text (answer) |> sansserif |> size 8 |> centered |> filled black |> move (0, -2)]
 
-type Msg = Tick Float GetKeyState | UpdatePos | ChangePage String
+type Msg = Tick Float GetKeyState | UpdatePos | ChangePage String | ChangeDir
 
 update msg model = case msg of
                      Tick t _ -> let
@@ -213,11 +225,17 @@ update msg model = case msg of
                                          else
                                            { model | currentPage = page }
 
+                     ChangeDir -> if model.direction == "left"
+                                        then 
+                                          { model | direction = "right" }
+                                        else 
+                                          { model | direction = "left" }
 init = { time = 0
          , playerPos = (-70, -50)
          , oppPos = (70, -50)
          , winner = " "
          , currentPage = "Main Menu"
          , questions = questions
+         , direction = "right"
          , currentQuestion = Maybe.withDefault ("0", ("0", "0", "0"), 0) <| List.head questions
          }

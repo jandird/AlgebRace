@@ -53,19 +53,21 @@ myShapes model = let
                        ]
                    else if page == "Tutorial" then 
                      group 
-                       [ text "- Solve for x in each question!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
+                       [ text "How To Play" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 50)
+                         , text "- Solve for x in each question!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
                          , text "- Click the correct answer to make the red car move" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,30)
                          , text "- Answer fast before the blue car wins!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,20)
-                         , mainMenuButton |> move (30, -30) |> notifyTap (ChangePage "Main Menu")
+                         , mainMenuButton |> move (0, -30) |> notifyTap (ChangePage "Main Menu")
                          --, 
                          
                        ]
-				   else if page == "Algebra" then 
+                   else if page == "Algebra" then 
                      group 
-                       [ text "- learn algebra" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
+                       [ text "How To Math" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 50)
+                         , text "- learn algebra" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
                          , text "- this is the tutorial page" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,30)
                          , text "- this is the tutorial page" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,20)
-                         , mainMenuButton |> move (30, -30) |> notifyTap (ChangePage "Main Menu") 
+                         , mainMenuButton |> move (0, -30) |> notifyTap (ChangePage "Main Menu") 
                        ]
                    else if page == "Game Over" then
                     group

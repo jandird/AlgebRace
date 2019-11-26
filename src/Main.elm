@@ -49,12 +49,23 @@ myShapes model = let
                         , text "ALGEB-RACE" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 20) |> notifyTap (ChangeDir)
                         , text "START" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, 2) |> notifyTap (ChangePage "Play Game")
                         , text "HOW TO PLAY" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -12) |> notifyTap (ChangePage "Tutorial")
-                        , text "HOW TO MATH" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -26)
+                        , text "HOW TO MATH" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -26) |> notifyTap (ChangePage "Algebra")
                        ]
                    else if page == "Tutorial" then 
                      group 
-                       [ text "This is the tutorial page" |> sansserif |> centered |> filled (rgb 100 0 100) |> move (0,0)
+                       [ text "- Solve for x in each question!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
+                         , text "- Click the correct answer to make the red car move" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,30)
+                         , text "- Answer fast before the blue car wins!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,20)
                          , mainMenuButton |> move (30, -30) |> notifyTap (ChangePage "Main Menu")
+                         --, 
+                         
+                       ]
+				   else if page == "Algebra" then 
+                     group 
+                       [ text "- learn algebra" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
+                         , text "- this is the tutorial page" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,30)
+                         , text "- this is the tutorial page" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,20)
+                         , mainMenuButton |> move (30, -30) |> notifyTap (ChangePage "Main Menu") 
                        ]
                    else if page == "Game Over" then
                     group

@@ -21,6 +21,10 @@ myShapes model = let
                    page = model.currentPage
                    currQ = model.currentQuestion
                    direction = model.direction
+
+                   blockA = model.blockA
+                   blockB = model.blockB
+                   blockC = model.blockC
                  in
                  [ square 300 |> filled green]
                  ++
@@ -43,9 +47,9 @@ myShapes model = let
                               redCar |> scale 0.25 |> move (sin model.time*53 , cos model.time*53)
                             , blueCar |> scale 0.25 |> move (sin -model.time*65 , cos -model.time*65)
                             ]
-                        , rect 62 12 |> filled (lightBlue) |> move (0, 5)
-                        , rect 62 12 |> filled (lightBlue) |> move (0, -9)
-                        , rect 62 12 |> filled (lightBlue) |> move (0, -23)
+                        , rect 62 12 |> filled (lightBlue) |> move (0, 5) |> notifyTap (ChangePage "Play Game")
+                        , rect 62 12 |> filled (lightBlue) |> move (0, -9) |> notifyTap (ChangePage "Tutorial")
+                        , rect 62 12 |> filled (lightBlue) |> move (0, -23) |> notifyTap (ChangePage "Algebra")
                         , text "ALGEB-RACE" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 20) |> notifyTap (ChangeDir)
                         , text "START" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, 2) |> notifyTap (ChangePage "Play Game")
                         , text "HOW TO PLAY" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -12) |> notifyTap (ChangePage "Tutorial")
@@ -95,6 +99,7 @@ myShapes model = let
                          , blueCar |> rotate(degrees -90) |> scale 0.25 |> move (oppPos)
                          -- , enterButton |> move (0, -30) |> notifyTap (UpdatePos)
                          , question currQ
+                         , wrongAnswer blockA blockB blockC
                          ]
                  ]
                  
@@ -103,24 +108,41 @@ question (q, (a, b, c), correct) = group
                   , if correct == 0 then 
                   group
                     [ questionButton a|> move (0, 0) |> notifyTap (UpdatePos)
-                   , questionButton b |> move (0, -15)
-                   , questionButton c |> move (0, -30)
+                   , questionButton b |> move (0, -15) |> notifyTap (WrongAnswer "b")
+                   , questionButton c |> move (0, -30) |> notifyTap (WrongAnswer "c")
                   ] 
-                  else if correct == 1 then
+                  else if correct == 1  then
                   group 
-                    [questionButton a |> move (0, 0) 
+                    [questionButton a |> move (0, 0) |> notifyTap (WrongAnswer "a")
                    , questionButton b |> move (0, -15) |> notifyTap (UpdatePos)
-                   , questionButton c |> move (0, -30) 
+                   , questionButton c |> move (0, -30) |> notifyTap (WrongAnswer "c")
                   ]
                   else
                   group 
-                    [questionButton a |> move (0, 0) 
-                   , questionButton b |> move (0, -15) 
+                    [questionButton a |> move (0, 0) |> notifyTap (WrongAnswer "a")
+                   , questionButton b |> move (0, -15) |> notifyTap (WrongAnswer "b")
                    , questionButton c |> move (0, -30) |> notifyTap (UpdatePos)
                   ]
                   ]
-wrongAnswer = group
-              [ text ("WRONG") |> filled (red) ]
+wrongAnswer blockA blockB blockC = group
+              [ if blockA == True
+                  then
+                    questionBlock
+                else
+                  group []
+
+                ,if blockB == True
+                  then
+                    questionBlock |> move(0, -15)
+                else
+                  group []
+
+                ,if blockC == True 
+                  then
+                    questionBlock |> move(0, -30)
+                else
+                  group []
+               ]
 redCar = group   
          [ roundedRect 100 25 20
             |> filled red
@@ -195,7 +217,11 @@ questionButton answer = group
                       [ rect 30 10 |> filled grey
                       , text (answer) |> sansserif |> size 8 |> centered |> filled black |> move (0, -2)]
 
-type Msg = Tick Float GetKeyState | UpdatePos | ChangePage String | ChangeDir
+questionBlock = group
+                      [ rect 30 10 |> filled green
+                      , text "WRONG!" |> sansserif |> size 8 |> centered |> filled red |> move (0, -2)]                     
+
+type Msg = Tick Float GetKeyState | UpdatePos | WrongAnswer String | ChangePage String | ChangeDir
 
 update msg model = case msg of
                      Tick t _ -> let
@@ -230,10 +256,19 @@ update msg model = case msg of
                                         (x, y) = model.playerPos
                                       in 
                                       { model | playerPos = (-70, y + 35)
-                                      --, questions = List.drop 1 model.questions
                                       , currentQuestion =  Maybe.withDefault ("x + 4 = 10", ("-2", "-6", "6"), 2) <| List.head <| List.drop 1 model.questions
                                       , questions = List.drop 1 model.questions
+                                      , blockA = False, blockB = False, blockC = False
                                       }
+
+                     WrongAnswer ans -> let (x, y) = model.playerPos in 
+                                        if ans == "a"
+                                          then {model | blockA = True, playerPos = (-70, y - 35)}
+                                        else if ans == "b"
+                                          then {model | blockB = True, playerPos = (-70, y - 35)}
+                                        else 
+                                          {model | blockC = True, playerPos = (-70, y - 35)}
+                                                     
                                        
                      ChangePage page -> if page == "Play Game" 
                                          then
@@ -241,7 +276,10 @@ update msg model = case msg of
                                            , playerPos = (-70, -50)
                                            , oppPos = (70, -50)
                                            , winner = " "
-                                           , questions = questions}
+                                           , questions = questions
+                                           , blockA = False
+                                           , blockB = False
+                                           , blockC = False}
                                          else
                                            { model | currentPage = page }
 
@@ -256,6 +294,9 @@ init = { time = 0
          , winner = " "
          , currentPage = "Main Menu"
          , questions = questions
+         , blockA = False
+         , blockB = False
+         , blockC = False
          , direction = "right"
          , currentQuestion = Maybe.withDefault ("0", ("0", "0", "0"), 0) <| List.head questions
          }

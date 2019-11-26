@@ -59,12 +59,19 @@ myShapes model = let
                    else if page == "Game Over" then
                     group
                       [
-                        if model.winner == "red" then 
-                          text "You Win! :)" |> sansserif |> centered |> filled blue 
+                        rect 300 10 |> filled (lightGray)
+                        , if model.winner == "red" then 
+                          group [
+                            text "You Win! :)" |> sansserif |> centered |> filled red |> move (0, 25)
+                            , redCar |> scale 0.25 |> move (sin model.time*53 , 0)
+                          ]
                         else 
-                          text "You Lose :(" |> sansserif |> centered |> filled red
-                        , playAgainButton |> move (-30, -30) |> notifyTap (ChangePage "Play Game")
-                        , mainMenuButton |> move (30, -30) |> notifyTap (ChangePage "Main Menu")
+                          group [
+                            text "You Lose :(" |> sansserif |> centered |> filled blue |> move (0, 25)
+                            , blueCar |> scale 0.25 |> move (sin model.time*53 , 0)
+                          ]
+                        , playAgainButton |> move (-40, -30) |> notifyTap (ChangePage "Play Game")
+                        , mainMenuButton |> move (40, -30) |> notifyTap (ChangePage "Main Menu")
                       ]
                    else -- Play Game page
                      group
@@ -162,12 +169,12 @@ enterButton = group
               ]
               
 playAgainButton = group
-              [ rect 40 10 |> filled (black)
+              [ rect 62 12 |> filled (lightBlue)
               , text ("Play again") |> sansserif |> size 8 |> centered |> filled white |> move (0, -2)
               ]
 
 mainMenuButton = group
-              [ rect 40 10 |> filled (black)
+              [ rect 62 12 |> filled (lightBlue)
               , text ("Main Menu") |> sansserif |> size 8 |> centered |> filled white |> move (0, -2)
               ]
 

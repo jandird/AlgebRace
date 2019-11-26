@@ -60,7 +60,7 @@ myShapes model = let
                          --, 
                          
                        ]
-				   else if page == "Algebra" then 
+                   else if page == "Algebra" then 
                      group 
                        [ text "- learn algebra" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
                          , text "- this is the tutorial page" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,30)

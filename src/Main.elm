@@ -51,27 +51,34 @@ myShapes model = let
                         , rect 62 12 |> filled (lightBlue) |> move (0, -9) |> notifyTap (ChangePage "Tutorial")
                         , rect 62 12 |> filled (lightBlue) |> move (0, -23) |> notifyTap (ChangePage "Algebra")
                         , text "ALGEB-RACE" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 20) |> notifyTap (ChangeDir)
-                        , text "START" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, 2) |> notifyTap (ChangePage "Play Game")
-                        , text "HOW TO PLAY" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -12) |> notifyTap (ChangePage "Tutorial")
-                        , text "HOW TO MATH" |> centered |> sansserif |> size 8 |> filled white |> move ( 0, -26) |> notifyTap (ChangePage "Algebra")
+                        , text "START" |> centered |> sansserif |> size 7 |> filled white |> move ( 0, 2) |> notifyTap (ChangePage "Play Game")
+                        , text "HOW TO PLAY" |> centered |> sansserif |> size 7 |> filled white |> move ( 0, -12) |> notifyTap (ChangePage "Tutorial")
+                        , text "ALGEBRA BASICS" |> centered |> sansserif |> size 6.5 |> filled white |> move ( 0, -26) |> notifyTap (ChangePage "Algebra")
                        ]
                    else if page == "Tutorial" then 
                      group 
                        [ text "How To Play" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 50)
-                         , text "- Solve for x in each question!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
-                         , text "- Click the correct answer to make the red car move" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,30)
-                         , text "- Answer fast before the blue car wins!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,20)
+                         , text "- Solve for x in each question" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,35)
+                         , text "- Click the correct answer to make the red car move" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,25)
+                         , text "- Answer fast before the blue car wins!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,15)
                          , mainMenuButton |> move (0, -30) |> notifyTap (ChangePage "Main Menu")
                          --, 
                          
                        ]
                    else if page == "Algebra" then 
-                     group 
-                       [ text "How To Math" |> centered |> sansserif |> bold |> underline |> filled white |> move (0, 50)
-                         , text "- learn algebra" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,40)
-                         , text "- this is the tutorial page" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,30)
-                         , text "- this is the tutorial page" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,20)
-                         , mainMenuButton |> move (0, -30) |> notifyTap (ChangePage "Main Menu") 
+                     group
+                       [ text "Adding and subtracting algebraic expressions:" |> sansserif |> size 5 |> filled (rgb 100 0 100) |> move (-70,40)
+                         , text "- Isolate for x! For example:" |> sansserif |> size 4 |> filled (rgb 100 0 100) |> move (-65,33)
+                         , text "x + 2 = 6" |> sansserif |> size 5 |> filled (rgb 100 0 100) |> move (-15,26)
+                         , text "x + 2 - 2 = 6 - 2" |> sansserif |> size 5 |> filled (rgb 100 0 120) |> move (-22,20)
+                         , text "x = 4" |> sansserif |> size 5 |> filled red |> move (-6,14)
+                         , text "Multiplying and dividing algebraic expressions:" |> sansserif |> size 5 |> filled (rgb 100 0 120) |> move (-70,5)
+                         , text "- Do the same, isolate for x! For example:" |> sansserif |> size 4 |> filled (rgb 100 0 100) |> move (-65,-2)
+                         , text "3x = 15" |> sansserif |> size 5 |> filled (rgb 100 0 100) |> move (-15,-9)
+                         , text "3x ÷ 3 = 15 ÷ 3" |> sansserif |> size 5 |> filled (rgb 100 0 120) |> move (-23,-15)
+                         , text "x = 5" |> sansserif |> size 5 |> filled red |> move (-12,-21)
+                         , mainMenuButton |> move (40, -35) |> notifyTap (ChangePage "Main Menu")
+                         --, nextStepButton |> move (-45, -35) |> notifyTap (AddLine)
                        ]
                    else if page == "Game Over" then
                     group

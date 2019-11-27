@@ -12,7 +12,7 @@ view model = collage 192 128 (myShapes model)
 -- questions list is formatted the following way:
 -- question, list of possible answers, which answer is correct (0, 1, or 2)
 
-questions = [("3 + x = 20", ("16", "31", "17"), 2), ("2x = 10", ("5", "6", "7"), 0), ("16 / x = 4", ("4", "5", "16"), 0), ("- 1 + x = 2", ("2", "3", "1"), 1),  ("3 - x = 20", ("-16", "-31", "-17"), 2), ("5x = 10", ("2", "3", "1"), 0), ("68 - x = 4", ("64", "-64", "-46"), 0), ("x / 2 = 16", ("-8", "8", "16"), 1) ]
+questions = [("3 + x = 20", ("16", "31", "17"), 2), ("2x = 10", ("5", "6", "7"), 0), ("16 / x = 4", ("4", "5", "16"), 0), ("- 1 + x = 2", ("2", "3", "1"), 1),  ("3 - x = 20", ("-16", "-31", "-17"), 2), ("5x = 10", ("2", "3", "1"), 0), ("68 - x = 4", ("64", "-64", "-46"), 0), ("x / 2 = 16", ("-8", "32", "16"), 1) ]
 
 -- possible pages: Main Menu, Tutorial, Play Game, Game Over
 myShapes model = let 

@@ -61,6 +61,7 @@ myShapes model = let
                          , text "- Solve for x in each question" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,35)
                          , text "- Click the correct answer to make the red car move" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,25)
                          , text "- Answer fast before the blue car wins!" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,15)
+                         , text "- Be careful! A wrong answer will move you backwards" |> sansserif |> size 6 |> filled (rgb 100 0 100) |> move (-60,5)
                          , mainMenuButton |> move (0, -30) |> notifyTap (ChangePage "Main Menu")
                          --, 
                          

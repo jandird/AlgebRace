@@ -17,7 +17,8 @@ Throughout our game, we used Norman's principles to create an application fit fo
 
 1) Feedback
 We offer feedback to our users when they interact with our game.  Examples of this are clicking buttons to change the page 
-(the feedback is the transition to the next page) or "WRONG" displayed when the user selects the wrong answer to a question.
+(the feedback is the transition to the next page) or "WRONG" displayed when the user selects the wrong answer to a question. 
+There is not a single button that can be pressed without feedback being provided.
 
 2) Constraints
 We used constraints to limit the possibilities and actions of our users. An example of this is that the game ends when the user
@@ -26,9 +27,12 @@ reaches the finish line in the game.  The cars cannot move off the screen.
 3) Mapping
 We map our controls to the functions available to our users.  We use natural mappings to improve the understanding of our users.
 For example, answering questions moves the player's cars upwards on the page, and the multiple choice is placed in a natural order.
+The cars are also mapped to their own sides, the player can naturally tell which side is theres.
 
 4) Discoverability
 We used discoverability by allowing users to discover the current state of our application. For example, transitioning between pages.
+The buttons are made obvious so the user knows exactly what they can press. The current state is also made obvious, nothing is hidden
+from the user.
 
 5) Affordance
 We afford users the options to perform their desired actions.  For example, changing pages, selecting answers to questions, and 
@@ -36,15 +40,17 @@ playing the game again.
 
 6) Signifiers
 We use signifiers such as labels, buttons, text, and movement of the cars to convey to the user the affordances available to the user.
+The cars are also designed as cars
 
 7) Conceptual Model
 Our tutorial pages help aid the users in understanding the conceptual model of our application.  All of the above mentioned principles 
-also contribute to the conceptual model of our application.
-
+also contribute to the conceptual model of our application. We use the graphics and name of the app to convey that it is indeed a racing
+game. Nothing is hidden from the user, they can easily tell what the app allows them to do.
  -}
 
 module Main exposing (..)
 
+-- Imports
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing(..)
 import List
@@ -55,9 +61,9 @@ import Random
 main = gameApp Tick { model = init, view = view, update = update, title = "Game Slot" }
 
 view model = collage 192 128 (myShapes model)
+
 -- questions list is formatted the following way:
 -- question, list of possible answers, which answer is correct (0, 1, or 2)
-
 questions = [ ("3 + x = 20", ("16", "31", "17"), 2), 
               ("2x = 10", ("5", "6", "7"), 0), 
               ("16 / x = 4", ("4", "5", "16"), 0), 
@@ -267,19 +273,19 @@ myShapes model = let
 -- helper method to display questions                
 question (q, (a, b, c), correct) = group
                   [ text (q) |> centered |> filled (black) |> move (0, 20) 
-                  , if correct == 0 then 
+                  , if correct == 0 then --Option A correct
                   group
                     [ questionButton a|> move (0, 0) |> notifyTap (UpdatePos)
                    , questionButton b |> move (0, -15) |> notifyTap (WrongAnswer "b")
                    , questionButton c |> move (0, -30) |> notifyTap (WrongAnswer "c")
                   ] 
-                  else if correct == 1  then
+                  else if correct == 1  then  --Option B correct
                   group 
                     [questionButton a |> move (0, 0) |> notifyTap (WrongAnswer "a")
                    , questionButton b |> move (0, -15) |> notifyTap (UpdatePos)
                    , questionButton c |> move (0, -30) |> notifyTap (WrongAnswer "c")
                   ]
-                  else
+                  else --Option C correct
                   group 
                     [questionButton a |> move (0, 0) |> notifyTap (WrongAnswer "a")
                    , questionButton b |> move (0, -15) |> notifyTap (WrongAnswer "b")
@@ -389,10 +395,11 @@ questionBlock = group
                       , text "WRONG!" |> sansserif |> size 8 |> centered |> filled red |> move (0, -2)]   
                
 
+-- Possible msg types for update function
 type Msg = Tick Float GetKeyState | UpdatePos | WrongAnswer String | ChangePage String | ChangeDir
 
 update msg model = case msg of
-                     Tick t _ -> let
+                     Tick t _ -> let -- Time update (updates player position and randomness)
                                    (oppX, oppY) = model.oppPos
                                    (playerX, playerY) = model.playerPos
                                    currentPage = model.currentPage
